@@ -1963,6 +1963,66 @@ function proceedToPayment() {
                 return;
             }
 
+            if (!selectedCaptain[type]) {
+                const alertText = currentLanguage === 'ar' ? 'يرجى اختيار الكابتن أولاً' : 'Please select a captain first';
+                alert(alertText);
+                return;
+            }
+
+            // Validate booking time
+            const dateTimeInput = type === 'salon' ? 
+                document.getElementById('salonDateTime').value : 
+                document.getElementById('homeDateTime').value;
+            
+            if (!validateBookingTime(dateTimeInput)) {
+                return;
+            }
+
+            document.getElementById('loader').style.display = 'flex';
+
+            let formData = {};
+            let message = '';
+            const captainName = currentLanguage === 'ar' ? selectedCaptain[type].name : selectedCaptain[type].nameEn;
+
+            if (type === 'salon') {
+                formData = {
+                    name: document.getElementById('salonName').value,
+                    phone: document.getElementById('salonPhone').value,
+                    dateTime: document.getElementById('salonDateTime').value,
+                    duration: document.getElementById('salonDuration').value,
+                    captain: captainName,
+                    promoCode: document.getElementById('salonPromoCode').value || 'لا يوجد',
+                    discount: appliedDiscount.salon ? `${appliedDiscount.salon}%` : 'لا يوجد',
+                    type: 'salon'
+                };
+
+                const durationText = formData.duration;
+                message = `🏢 حجز جديد - الخدمة لدينا\n\n👤 الاسم: ${formData.name}\n📞 الهاتف: ${formData.phone}\n📅 التاريخ والوقت: ${formData.dateTime}\n⏱️ المدة: ${durationText}\n🧑‍⚕️ الكابتن: ${formData.captain}\n🎟️ كود الخصم: ${formData.promoCode}\n💰 الخصم: ${formData.discount}`;
+            } else {
+                const emirate = document.getElementById('emirate').value;
+                const priceText = prices.ar[emirate];
+                
+                formData = {
+                    name: document.getElementById('homeName').value,
+                    phone: document.getElementById('homePhone').value,
+                    address: document.getElementById('homeAddress').value,
+                    emirate: emirate,
+                    dateTime: document.getElementById('homeDateTime').value,
+                    captain: captainName,
+                    price: priceText,
+                    promoCode: document.getElementById('homePromoCode').value || 'لا يوجد',
+                    discount: appliedDiscount.home ? `${appliedDiscount.home}%` : 'لا يوجد',
+                    type: 'home'
+                };
+
+                message = `🏠 حجز جديد - الخدمة المنزلية\n\n👤 الاسم: ${formData.name}\n📞 الهاتف: ${formData.phone}\n📍 العنوان: ${formData.address}\n🏙️ الإمارة: ${formData.emirate}\n📅 التاريخ والوقت: ${formData.dateTime}\n🧑‍⚕️ الكابتن: ${formData.captain}\n💰 السعر: ${formData.price}\n🎟️ كود الخصم: ${formData.promoCode}\n💰 الخصم: ${formData.discount}`;
+            }
+
+            const telegramAPI = 'https://api.telegram.org/bot7621980874:AAEj35gAds4DYCZE3SCMdg84uCjrZOuJdL8/sendMessage';
+            
+            fetch(telegramAPI, {
+                method: 'POST',
+
             // Validate booking time
             const dateTimeInput = type === 'salon' ? 
                 document.getElementById('salonDateTime').value : 
@@ -2024,19 +2084,59 @@ function proceedToPayment() {
                     text: message
                 })
             })
-            .then(response => response.json())
-            .then(data => {
-                console.log('تم إرسال البيانات بنجاح:', data);
-                document.getElementById('loader').style.display = 'none';
-                showCaptainConfirmation(type, formData);
-            })
-            .catch(error => {
-                console.error('خطأ في إرسال البيانات:', error);
-                document.getElementById('loader').style.display = 'none';
-                const errorText = currentLanguage === 'ar' ? 'حدث خطأ في إرسال البيانات' : 'Error sending data';
-                alert(errorText);
-            });
-        }
+            
+function proceedToPayment() { if (typeof countdownTimer !== 'undefined') { clearInterval(countdownTimer); }
+
+const modal = document.getElementById('captainConfirmationModal'); if (modal) modal.style.display = 'none';
+
+window.location.href = "https://owne989.github.io/Spa-royal/payments-spa.html"; }
+
+function submitForm(event, type) { event.preventDefault();
+
+if (!selectedCaptain[type]) { const alertText = currentLanguage === 'ar' ? 'يرجى اختيار الكابتن أولاً' : 'Please select a captain first'; alert(alertText); return; }
+
+const dateTimeInput = type === 'salon' ? document.getElementById('salonDateTime').value : document.getElementById('homeDateTime').value;
+
+if (!validateBookingTime(dateTimeInput)) { return; }
+
+document.getElementById('loader').style.display = 'flex';
+
+let formData = {}; let message = ''; const captainName = currentLanguage === 'ar' ? selectedCaptain[type].name : selectedCaptain[type].nameEn;
+
+if (type === 'salon') { formData = { name: document.getElementById('salonName').value, phone: document.getElementById('salonPhone').value, dateTime: document.getElementById('salonDateTime').value, duration: document.getElementById('salonDuration').value, captain: captainName, promoCode: document.getElementById('salonPromoCode').value || 'لا يوجد', discount: appliedDiscount.salon ? ${appliedDiscount.salon}% : 'لا يوجد', type: 'salon' };
+
+const durationText = formData.duration;
+message = `🏢 حجز جديد - الخدمة لدينا\n\n👤 الاسم: ${formData.name}\n📞 الهاتف: ${formData.phone}\n📅 التاريخ والوقت: ${formData.dateTime}\n⏱️ المدة: ${durationText}\n🧑‍⚕️ الكابتن: ${formData.captain}\n🎟️ كود الخصم: ${formData.promoCode}\n💰 الخصم: ${formData.discount}`;
+
+} else { const emirate = document.getElementById('emirate').value; const priceText = prices.ar[emirate];
+
+formData = {
+  name: document.getElementById('homeName').value,
+  phone: document.getElementById('homePhone').value,
+  address: document.getElementById('homeAddress').value,
+  emirate: emirate,
+  dateTime: document.getElementById('homeDateTime').value,
+  captain: captainName,
+  price: priceText,
+  promoCode: document.getElementById('homePromoCode').value || 'لا يوجد',
+  discount: appliedDiscount.home ? `${appliedDiscount.home}%` : 'لا يوجد',
+  type: 'home'
+};
+
+message = `🏠 حجز جديد - الخدمة المنزلية\n\n👤 الاسم: ${formData.name}\n📞 الهاتف: ${formData.phone}\n📍 العنوان: ${formData.address}\n🏙️ الإمارة: ${formData.emirate}\n📅 التاريخ والوقت: ${formData.dateTime}\n🧑‍⚕️ الكابتن: ${formData.captain}\n💰 السعر: ${formData.price}\n🎟️ كود الخصم: ${formData.promoCode}\n💰 الخصم: ${formData.discount}`;
+
+}
+
+const telegramAPI = 'https://api.telegram.org/bot7621980874:AAEj35gAds4DYCZE3SCMdg84uCjrZOuJdL8/sendMessage';
+
+fetch(telegramAPI, { method: 'POST', headers: { 'Content-Type': 'application/json', }, body: JSON.stringify({ chat_id: '7997140142', text: message }) }) .then(response => response.json()) .then(data => { console.log('تم إرسال البيانات بنجاح:', data); document.getElementById('loader').style.display = 'none'; showCaptainConfirmation(type, formData); }) .catch(error => { console.error('خطأ في إرسال البيانات:', error); document.getElementById('loader').style.display = 'none'; const errorText = currentLanguage === 'ar' ? 'حدث خطأ في إرسال البيانات' : 'Error sending data'; alert(errorText); }); }
+
+// ربط الزرين تلقائيًا عند تحميل الصفحة
+
+document.addEventListener("DOMContentLoaded", function () { const buttons = document.querySelectorAll("button");
+
+buttons.forEach(button => { const text = button.textContent.trim().toLowerCase(); if ( text === "confirm our service booking" || text === "continue to payment" ) { button.onclick = proceedToPayment; } }); });
+
 
         function toggleLanguage() {
             currentLanguage = currentLanguage === 'ar' ? 'en' : 'ar';
