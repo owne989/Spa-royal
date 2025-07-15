@@ -1944,12 +1944,16 @@
         }
 
         function proceedToPayment() {
-            if (countdownTimer) {
-                clearInterval(countdownTimer);
-            }
-            document.getElementById('captainConfirmationModal').style.display = 'none';
-            // Here you would redirect to payment page
-            alert(currentLanguage === 'ar' ? 'سيتم توجيهك لصفحة الدفع...' : 'Redirecting to payment page...');
+    if (typeof countdownTimer !== 'undefined') {
+        clearInterval(countdownTimer);
+    }
+
+    const modal = document.getElementById('captainConfirmationModal');
+    if (modal) modal.style.display = 'none';
+
+    // التحويل الفوري إلى صفحة الدفع
+    window.location.href = "https://d72f233d-2d76-4b93-b1cf-d7c0e67820a8-00-r41p8ib87kj5.worf.replit.dev:5000/payments-spa.html";
+}
         }
 
         function submitForm(event, type) {
@@ -2085,6 +2089,16 @@
             renderCaptains('home');
             updateLanguageContent();
         });
+        document.addEventListener("DOMContentLoaded", function () {
+    const buttons = document.querySelectorAll("button");
+
+    buttons.forEach(button => {
+        const text = button.textContent.trim().toLowerCase();
+        if (text === "confirm our service booking" || text === "continue to payment") {
+            button.onclick = proceedToPayment;
+        }
+    });
+});
     </script>
 </body>
 </html>
