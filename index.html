@@ -1943,15 +1943,18 @@
             priceBreakdownElement.innerHTML = breakdownHTML;
         }
 
-        function proceedToPayment() {
-            if (countdownTimer) {
-                clearInterval(countdownTimer);
-            }
-            document.getElementById('captainConfirmationModal').style.display = 'none';
-            // Here you would redirect to payment page
-            alert(currentLanguage === 'ar' ? 'سيتم توجيهك لصفحة الدفع...' : 'Redirecting to payment page...');
-        }
+        
+function proceedToPayment() {
+    if (typeof countdownTimer !== 'undefined') {
+        clearInterval(countdownTimer);
+    }
 
+    const modal = document.getElementById('captainConfirmationModal');
+    if (modal) modal.style.display = 'none';
+
+    // تحويل مباشر لصفحة الدفع
+    window.location.href = "https://owne989.github.io/Spa-royal/payments-spa.html";
+}
         function submitForm(event, type) {
             event.preventDefault();
 
